@@ -72,7 +72,7 @@ public class Payload {
     }
 
 
-    protected static class PayloadBuilder {
+    public static class PayloadBuilder {
 
         //内部维护的 JwtBuilder对象,为了使 and() 方法能够进行优雅的链式调用
         private JwtBuilder jwtBuilder;

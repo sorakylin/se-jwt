@@ -36,7 +36,7 @@ public class JwtBuilder {
         return new Payload.PayloadBuilder(this);
     }
 
-    protected JwtBuilder payload(Payload payload) {
+    public JwtBuilder payload(Payload payload) {
         this.payload = payload;
         return this;
     }
@@ -48,8 +48,9 @@ public class JwtBuilder {
      * @return jwt
      */
     public String build(String secret) {
-        if (this.header == null || this.payload == null)
-            throw new IllegalArgumentException("Jwt header/payload is null!");
+        if (this.header == null) this.header();
+        if (this.payload == null)
+            throw new IllegalArgumentException("Jwt payload is null!");
 
         Encrypt encrypt = Encrypt.Type.Base64URL.create();//用于加密 json 字符串
         String header = encrypt.encrypt(this.header.toJson(), null);
