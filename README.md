@@ -7,14 +7,14 @@ This is a jwt build tool and some cryptographic components.
 此工具主要用于生成 jwt (Json Web Token)。 必须使用JDK1.8及以上。 
 
 com.skypyb.jwt 包下为可以舒适的创建 jwt 所必需的类
-- 通过 JwtBuilder 来进行建造,使用优雅的链式调用法指定好 header(默认HmacSHA256)、payload、secret。  
+- 通过 JwtBuilder 来进行建造,使用优雅的链式调用法指定好 header、payload、secret。`默认使用 HmacSHA256 进行签名加密`  
 - 可通过 enum 选择多种签名加密算法,配合 com.skypyb.cryptography.Encrypt 接口,随意手写专属签名加密。  
 - jwt 负载(payload) 创建时,可方便的放入私有属性/json 对象以供业务处理,支持 String 类型或是 JsonNode 类型。
 - 需要使用到 jwt 的应该都用 Spring 吧,选择的 json 处理库为 Spring 默认集成的 [jackson](https://github.com/FasterXML/jackson)。
 - 若是不需要生成 jwt ,只需要加密组件的话,删除此包即可,无任何影响。
 <br>
 
-com.skypyb.cryptography 包下封装许多加密/解密`包括hash/散列/编码等非加密算法 , 以下同`的实现
+com.skypyb.cryptography 包下封装许多加密/解密的实现。`包括hash/散列/编码等非加密算法 , 以下同`
 - 拥有一个加密/解密的接口 Encrypt ,能够实现它来自由定制不同的加密方式,可扩展性优秀。
 - 可使用 enum Encrypt.Type 快速的创建实体。`使用枚举创建的算法实体默认是单例的`
 - 目前实现的加密方式:  
