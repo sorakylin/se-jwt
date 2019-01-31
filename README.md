@@ -57,9 +57,9 @@ console:
 #### jwt 创建方式/调用方式 示例
 ```java
 String jwt = new JwtBuilder().header(Encrypt.Type.HS512)//指定加密方式为 HmacSHA512
-    .payload().iss("Koishi").exp(TimeUnit.MINUTES.toMillis(3))
-    .data("abc", "abc").data("666", "qwe")//自定义负载的参数
-    .and().build("This is key secret");
+        .payload().iss("Koishi").exp(TimeUnit.MINUTES.toMillis(3))
+        .data("abc", "abc").data("666", "qwe")//自定义负载的参数
+        .and().build("This is key secret");
     
 //or
     
@@ -76,15 +76,28 @@ eyJqdGkiOjEsImV4cCI6MTU0ODkxNTkwNDc2NywibmJmIjoxNTQ4OTE1NzI0NzY3LCJpYXQiOjE1NDg5
 header 部分经过Base64URL解码后: {"alg":"HS512","typ":"JWT"}
 payload 部分经过Base64URL解码后: {"jti":1,"exp":1548915904767,"nbf":1548915724767,"iat":1548915724767,"iss":"Koishi","abc":"abc","666":"qwe"}
 */
-  
-//验证 jwt 是否被篡改:
-String[] tempArr = jwt.split("\\.");
-
-Encrypt hs512 = Encrypt.Type.HS512.create();
-String ciphertext = hs512.encrypt(tempArr[0] + "." + tempArr[1], "This is key secret");
-
-boolean isMatch = ciphertext.equals(tempArr[2]);//true
 ```
 
 <br>
 <br>
+
+#### jwt 验证示例 
+```java
+String[] tempArr = jwt.split("\\.");
+  
+//1、先得到头部json
+String headerJson = Encrypt.Type.Base64URL.create().decrypt(tempArr[0], null);
+  
+//2、进行 json 处理,取头部 algorithm 属性,即获取 signature 的算法
+Map map = new ObjectMapper().readValue(headerJson, Map.class);
+String encryptType = map.get("alg").toString();
+  
+//3、通过 valueOf 方法获取对应算法的 enum 并进行算法实体的创建
+Encrypt encrypt = Encrypt.Type.valueOf(encryptType).create();
+  
+//4、通过 key secret 进行签名匹配
+String ciphertext = encrypt.encrypt(tempArr[0] + "." + tempArr[1], "This is key secret");
+boolean isMatch = ciphertext.equals(tempArr[2]);//true (这里以上面的创建示例1作为演示)
+  
+//注: 服务端知道签名算法的话省略1/2/3 步骤
+```
