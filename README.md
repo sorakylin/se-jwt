@@ -16,7 +16,8 @@ com.skypyb.jwt 包下为可以舒适的创建 jwt 所必需的类
 
 com.skypyb.cryptography 包下封装许多加密/解密`包括hash/散列/编码等非加密算法 , 以下同`的实现
 - 拥有一个加密/解密的接口 Encrypt ,能够实现它来自由定制不同的加密方式,可扩展性优秀。
-- 目前实现的加密方式(可使用 enum Encrypt.Type 快速创建的实体):  
+- 可使用 enum Encrypt.Type 快速的创建实体。`使用枚举创建的算法实体默认是单例的`
+- 目前实现的加密方式:  
     - AES
     - HmacMD5
     - HmacSHA1
