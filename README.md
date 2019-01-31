@@ -17,6 +17,7 @@ com.skypyb.jwt 包下为可以舒适的创建 jwt 所必需的类
 com.skypyb.cryptography 包下封装许多加密/解密(包括hash/散列/编码等非加密算法 , 以下同)的实现
 - 拥有一个加密/解密的接口 Encrypt ,能够实现它来自由定制不同的加密方式,可扩展性优秀。
 - 目前实现的加密方式(可使用 enum Encrypt.Type 快速创建的实体):  
+    - AES
     - HmacMD5
     - HmacSHA1
     - HmacSHA224
@@ -32,6 +33,27 @@ com.skypyb.cryptography 包下封装许多加密/解密(包括hash/散列/编码
 <br>
 <br>
 
+  
+#### Encrypt 加解密接口使用示例
+```java
+String str = "666你 好好nihaohao=@!!%#$--/";
+String key = "key_A123666";
+
+//得到一个AES实现
+Encrypt aes = Encrypt.Type.AES.create();
+String result = aes.encrypt(str, key);
+System.out.println(result);
+System.out.println(aes.decrypt(result, key));
+        
+/*
+console:
+    E99No6eLAZ0yeq8KeY6AhECjs2roEgeEdCViZfKbnkg=
+    666你 好好nihaohao=@!!%#$--/
+*/
+```
+<br>
+<br>
+
 #### jwt 创建方式/调用方式 示例
 ```java
 String jwt = new JwtBuilder().header(Encrypt.Type.HS512)//指定加密方式为 HmacSHA512
@@ -43,5 +65,26 @@ String jwt = new JwtBuilder().header(Encrypt.Type.HS512)//指定加密方式为 
     
 Payload payload = new Payload.PayloadBuilder().exp(30000L).build();
 String jwt2 = new JwtBuilder().payload(payload).header().build("This is key secret");
-    
+  
+
+/*
+例子 1 取得的 jwt :
+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.
+eyJqdGkiOjEsImV4cCI6MTU0ODkxNTkwNDc2NywibmJmIjoxNTQ4OTE1NzI0NzY3LCJpYXQiOjE1NDg5MTU3MjQ3NjcsImlzcyI6IktvaXNoaSIsImFiYyI6ImFiYyIsIjY2NiI6InF3ZSJ9.
+48AB9034F794D71B7BFA8B3D660DEF0C78D3CBE666721A9D8F140E7097709AFC425F8F26454668C8A0B9A75A8A90D4954FAF6F84EE5FE4EE998CF9FD9669CD86
+  
+header 部分经过Base64URL解码后: {"alg":"HS512","typ":"JWT"}
+payload 部分经过Base64URL解码后: {"jti":1,"exp":1548915904767,"nbf":1548915724767,"iat":1548915724767,"iss":"Koishi","abc":"abc","666":"qwe"}
+*/
+  
+//验证 jwt 是否被篡改:
+String[] tempArr = jwt.split("\\.");
+
+Encrypt hs512 = Encrypt.Type.HS512.create();
+String ciphertext = hs512.encrypt(tempArr[0] + "." + tempArr[1], "This is key secret");
+
+boolean isMatch = ciphertext.equals(tempArr[2]);//true
 ```
+
+<br>
+<br>

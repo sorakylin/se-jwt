@@ -19,6 +19,7 @@ public interface Encrypt {
 
 
     enum Type {
+        AES(new AESEncrypt()),
         HmacMD5(new HmacSHAEncrypt("HmacMD5")),
         HS1(new HmacSHAEncrypt("HmacSHA1")),
         HS224(new HmacSHAEncrypt("HmacSHA224")),
