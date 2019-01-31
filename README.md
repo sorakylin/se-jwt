@@ -57,7 +57,7 @@ console:
 
 #### jwt 创建方式/调用方式 示例
 ```java
-String jwt = new JwtBuilder().header(Encrypt.Type.HS512)//指定加密方式为 HmacSHA512
+String jwt = new JwtBuilder().header(Encrypt.Type.HS512)//指定签名加密算法为 HmacSHA512,默认为 HmacSHA256
         .payload().iss("Koishi").exp(TimeUnit.MINUTES.toMillis(3))
         .data("abc", "abc").data("666", "qwe")//自定义负载的参数
         .and().build("This is key secret");
