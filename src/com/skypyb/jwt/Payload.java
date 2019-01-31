@@ -79,7 +79,7 @@ public class Payload {
 
         private static volatile long jti = 0L;//编号
         private String iss;//签发人
-        private Long exp = -1L; //过期时间
+        private Long exp = -1L; //过期时间,-1为永不过期
         private String sub;//主题
         private String aud;//受众
         private Long nbf;//生效时间,若不设置则默认 build() 方法调用的时间
@@ -111,7 +111,7 @@ public class Payload {
         }
 
         //多久过期,如设置30000则表示30秒后过期
-        //最终建造出来的实际过期时间为(生效时间+过期时间)
+        //只要设置了则最终建造出来的实际过期时间为(生效时间+过期时间)
         public PayloadBuilder exp(Long exp) {
             this.exp = exp;
             return this;
@@ -143,15 +143,15 @@ public class Payload {
         }
 
         /**
-         * 建造一个 jwt 的负载
+         * 建造一个 jwt 的负载,包含了该 jwt 的信息
          *
-         * @return
+         * @return Payload 负载对象
          */
         public Payload build() {
             long time = System.currentTimeMillis();
-            if (this.nbf == null) this.nbf = time;
             this.iat = time;
-            this.exp += this.nbf;
+            this.nbf = this.nbf == null ? time : this.nbf;
+            this.exp = this.exp == -1L ? -1L : this.exp + this.nbf;
             ++this.jti;
             return new Payload(this);
         }
