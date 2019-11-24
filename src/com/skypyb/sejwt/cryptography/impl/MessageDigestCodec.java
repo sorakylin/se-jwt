@@ -1,5 +1,7 @@
-package com.skypyb.sejwt.cryptography;
+package com.skypyb.sejwt.cryptography.impl;
 
+
+import com.skypyb.sejwt.cryptography.Codec;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

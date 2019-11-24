@@ -61,7 +61,7 @@ public class JwtBuilder {
         String header = codec.encrypt(this.header.toJson(), null);
         String payload = codec.encrypt(this.payload.toJson(), null);
 
-        StringBuffer sb = new StringBuffer(header).append('.').append(payload);
+        StringBuilder sb = new StringBuilder(header).append('.').append(payload);
 
         //方法签名
         String signature = this.header.getEncryptor().encrypt(sb.toString(), secret);

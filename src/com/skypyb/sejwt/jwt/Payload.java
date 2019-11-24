@@ -3,12 +3,15 @@ package com.skypyb.sejwt.jwt;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.skypyb.sejwt.jwt.strategy.DefaultJtiGenerateStrategy;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * jwt 负载
@@ -21,7 +24,7 @@ import java.util.Map;
  * @time 2019-01-28
  */
 public class Payload {
-    private final long jti;//编号
+    private final String jti;//编号
     private final String iss;//签发人
     private final Long exp; //过期时间
     private final String sub;//主题
@@ -77,7 +80,10 @@ public class Payload {
         //内部维护的 JwtBuilder对象,为了使 and() 方法能够进行优雅的链式调用
         private JwtBuilder jwtBuilder;
 
-        private static volatile long jti = 0L;//编号
+        private Supplier<String> jtiGenerateStrategy = DefaultJtiGenerateStrategy.getInstance();
+
+
+        private String jti = null;//编号
         private String iss;//签发人
         private Long exp = -1L; //过期时间,-1为永不过期
         private String sub;//主题
@@ -95,6 +101,11 @@ public class Payload {
             this.jwtBuilder = jwtBuilder;
         }
 
+        public PayloadBuilder setJtiGenerator(Supplier<String> jtiGenerateStrategy) {
+            this.jtiGenerateStrategy = jtiGenerateStrategy;
+            return this;
+        }
+
         public PayloadBuilder data(String jsonKey, JsonNode jsonNode) {
             this.dataMap.put(jsonKey, jsonNode);
             return this;
@@ -107,6 +118,11 @@ public class Payload {
 
         public PayloadBuilder iss(String iss) {
             this.iss = iss;
+            return this;
+        }
+
+        public PayloadBuilder jti(String jti) {
+            this.jti = jti;
             return this;
         }
 
@@ -152,7 +168,9 @@ public class Payload {
             this.iat = time;
             this.nbf = this.nbf == null ? time : this.nbf;
             this.exp = this.exp == -1L ? -1L : this.exp + this.nbf;
-            ++this.jti;
+
+            if (Objects.isNull(this.jti)) this.jti = jtiGenerateStrategy.get();
+
             return new Payload(this);
         }
 

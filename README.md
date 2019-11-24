@@ -11,12 +11,12 @@ com.skypyb.sejwt.jwt 包下为可以舒适的创建 jwt 所必需的类
 - 可通过 enum 选择多种签名加密算法,配合 com.skypyb.sejwt.cryptography.Codec 接口,随意手写专属签名加密。  
 - jwt 负载(payload) 创建时,可方便的放入私有属性/json 对象以供业务处理,支持 String 类型或是 JsonNode 类型。
 - 选择的 json 处理库为 [jackson](https://github.com/FasterXML/jackson)。
-- 若是不需要生成 jwt ,只需要加密组件的话,删除此包即可,无任何影响。
 <br>
 
 com.skypyb.sejwt.cryptography 包下封装许多加密/解密的实现。`包括hash/散列/编码等非加密算法 , 以下同`
 - 拥有一个加密/解密的接口 Codec ,能够实现它来自由定制不同的加密方式,可扩展性优秀。
 - 可使用 enum Codec.Type 快速的创建实体。`使用枚举创建的算法实体默认是单例的`
+- 该包是高内聚的,可不依靠jwt模块单独使用
 - 目前实现的加密方式:  
     - AES
     - HmacMD5
