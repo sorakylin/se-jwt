@@ -1,16 +1,17 @@
 # se-jwt
 This is a jwt build tool and some cryptographic components.
 
-[![version](https://img.shields.io/badge/version-v1.2.0-orange.svg)](/skypyb/se-jwt)
+[![version](https://img.shields.io/badge/version-v1.2.0-orange.svg)](../)
 [![License](https://img.shields.io/badge/License-MIT-red.svg)](https://mit-license.org/)
 [![Jdk](https://img.shields.io/badge/jdk-1.8-green)](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-[![jackson](https://img.shields.io/badge/version-orange)](https://github.com/FasterXML/jackson)
+[![jackson](https://img.shields.io/badge/jackson-orange)](https://github.com/FasterXML/jackson)
 
 <br>
 <br>
 
 
 ### 快速开始
+<br>
   
 #### Codec 加解密接口使用
 ```java
