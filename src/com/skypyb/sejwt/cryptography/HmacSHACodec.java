@@ -1,4 +1,4 @@
-package com.skypyb.sejwt.cryptography.impl;
+package com.skypyb.sejwt.cryptography;
 
 
 import com.skypyb.sejwt.cryptography.Codec;

@@ -1,5 +1,8 @@
 # se-jwt
 This is a jwt build tool and some cryptographic components.
+
+[![License](https://img.shields.io/badge/License-MIT-red.svg)](https://mit-license.org/)
+
 <br>
 <br>
 
@@ -7,18 +10,21 @@ This is a jwt build tool and some cryptographic components.
 此工具主要用于生成 jwt (Json Web Token)。 必须使用JDK1.8及以上。 
 
 com.skypyb.sejwt.jwt 包下为可以舒适的创建 jwt 所必需的类
-- 通过 JwtBuilder 来进行建造,使用优雅的链式调用法指定好 header、payload、secret。`默认使用 HmacSHA256 进行签名加密`  
-- 可通过 enum 选择多种签名加密算法,配合 com.skypyb.sejwt.cryptography.Codec 接口,随意手写专属签名加密。  
+- 通过 Builder 来进行建造,使用优雅的链式调用法指定好 header、payload、secret。`默认使用 HmacSHA256 进行签名加密`  
+- 可通过枚举快速选择多种签名加密算法,当然也可以自己实现 com.skypyb.sejwt.cryptography.Codec 接口,随意手写专属签名加密。  
 - jwt 负载(payload) 创建时,可方便的放入私有属性/json 对象以供业务处理,支持 String 类型或是 JsonNode 类型。
+- payload 中的 jti(编号) 除直接set的方式外，也可使用指定的 jti 生成器来进行生成，默认情况下使用的的是long型ID自增生成器。
 - 选择的 json 处理库为 [jackson](https://github.com/FasterXML/jackson)。
 <br>
 
 com.skypyb.sejwt.cryptography 包下封装许多加密/解密的实现。`包括hash/散列/编码等非加密算法 , 以下同`
 - 拥有一个加密/解密的接口 Codec ,能够实现它来自由定制不同的加密方式,可扩展性优秀。
-- 可使用 enum Codec.Type 快速的创建实体。`使用枚举创建的算法实体默认是单例的`
+- 可使用 enum Codec.Type 快速的创建 Codec 实例。`使用枚举创建的算法实体默认是单例的`
 - 该包是高内聚的,可不依靠jwt模块单独使用
 - 目前实现的加密方式:  
     - AES
+    - DES
+    - DES3
     - HmacMD5
     - HmacSHA1
     - HmacSHA224

@@ -1,10 +1,7 @@
 package com.skypyb.sejwt.cryptography;
 
 
-import com.skypyb.sejwt.cryptography.impl.AesCodec;
-import com.skypyb.sejwt.cryptography.impl.Base64Codec;
-import com.skypyb.sejwt.cryptography.impl.HmacSHACodec;
-import com.skypyb.sejwt.cryptography.impl.MessageDigestCodec;
+import com.skypyb.sejwt.cryptography.impl.*;
 
 /**
  * 加密 or 解密的接口,并不规定只有加解密能够实现
@@ -25,6 +22,8 @@ public interface Codec {
 
     enum Type {
         AES(new AesCodec()),
+        DES(new DesCodec()),
+        DES3(new DESedeCodec()),
         HmacMD5(new HmacSHACodec("HmacMD5")),
         HS1(new HmacSHACodec("HmacSHA1")),
         HS224(new HmacSHACodec("HmacSHA224")),

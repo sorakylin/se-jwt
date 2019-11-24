@@ -14,15 +14,15 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 /**
- * AES 对称加密,这里填充方式选用 PKCS5Padding
+ * DES 对称加密
  *
  * @author pyb
- * @time 2019-01-31
+ * @time 2019-11-24
  */
-public class AesCodec extends SymmetricCodec {
+public class DesCodec extends SymmetricCodec {
 
-    public AesCodec() {
-        super("AES/ECB/PKCS5PADDING");
+    public DesCodec() {
+        super("DES/ECB/PKCS5PADDING");
     }
 
     @Override
@@ -30,15 +30,16 @@ public class AesCodec extends SymmetricCodec {
         KeyGenerator kgen = null;
         SecureRandom random = null;
         try {
-            kgen = KeyGenerator.getInstance("AES");
+            kgen = KeyGenerator.getInstance("DES");
             random = SecureRandom.getInstance("SHA1PRNG");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
         random.setSeed(secret.getBytes());
-        kgen.init(128, random);
+        kgen.init(56, random);
         Key key = kgen.generateKey();
         return key;
     }
+
 }
