@@ -1,12 +1,81 @@
 # se-jwt
 This is a jwt build tool and some cryptographic components.
 
+[![version](https://img.shields.io/badge/version-v1.2.0-orange.svg)](/skypyb/se-jwt)
 [![License](https://img.shields.io/badge/License-MIT-red.svg)](https://mit-license.org/)
+[![Jdk](https://img.shields.io/badge/jdk-1.8-green)](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+[![jackson](https://img.shields.io/badge/version-orange)](https://github.com/FasterXML/jackson)
 
 <br>
 <br>
 
-#### 说明  
+
+### 快速开始
+  
+#### Codec 加解密接口使用
+```java
+String str = "666你 好好nihaohao=@!!%#$--/";
+String key = "key_A123666";
+
+//得到一个AES实现
+Codec aes = Codec.Type.AES.create();
+String result = aes.encrypt(str, key);
+System.out.println(result);
+System.out.println(aes.decrypt(result, key));
+        
+/*
+console:
+    RlPSP1CQwWyU+RSKuG0aXmREDUN9j12vCBQEns+gLyc=
+    666你 好好nihaohao=@!!%#$--/
+*/
+```
+<br>
+<br>
+
+#### jwt 创建方式/调用方式
+```java
+String jwt = new JwtBuilder()
+        .header(Codec.Type.HS512)//指定签名加密算法为 HmacSHA512,默认为 HmacSHA256
+        .payload() //设置payload负载
+        .iss("Koishi").exp(TimeUnit.MINUTES.toMillis(3))
+        .data("abc", "abc").data("666", "qwe")//自定义负载的参数
+        .and().build("This is key secret");//建造jwt, 使用指定的秘钥进行签名
+    
+//or
+    
+Payload payload = new Payload.PayloadBuilder().build(); //所有值都是默认的payload
+String jwt2 = new JwtBuilder().payload(payload).build("This is key secret");
+  
+
+/*
+例子 1 取得的 jwt :
+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.
+eyJqdGkiOjEsImV4cCI6MTU0ODkxNTkwNDc2NywibmJmIjoxNTQ4OTE1NzI0NzY3LCJpYXQiOjE1NDg5MTU3MjQ3NjcsImlzcyI6IktvaXNoaSIsImFiYyI6ImFiYyIsIjY2NiI6InF3ZSJ9.
+48AB9034F794D71B7BFA8B3D660DEF0C78D3CBE666721A9D8F140E7097709AFC425F8F26454668C8A0B9A75A8A90D4954FAF6F84EE5FE4EE998CF9FD9669CD86
+  
+header 部分经过Base64URL解码后: {"alg":"HS512","typ":"JWT"}
+payload 部分经过Base64URL解码后: {"jti":1,"exp":1548915904767,"nbf":1548915724767,"iat":1548915724767,"iss":"Koishi","abc":"abc","666":"qwe"}
+*/
+```
+
+<br>
+<br>
+
+#### jwt 验证:
+```java
+String[] tempArr = jwt.split("\\.");
+  
+//通过 key secret 进行签名匹配 (这里以上面的jwt创建示例1作为演示)
+String ciphertext = Codec.Type.HS512.encrypt(tempArr[0] + "." + tempArr[1], "This is key secret");
+boolean isMatch = ciphertext.equals(tempArr[2]);//true 
+
+```
+
+<br>
+<br>
+
+
+### 说明  
 此工具主要用于生成 jwt (Json Web Token)。 必须使用JDK1.8及以上。 
 
 com.skypyb.sejwt.jwt 包下为可以舒适的创建 jwt 所必需的类
@@ -39,72 +108,3 @@ com.skypyb.sejwt.cryptography 包下封装许多加密/解密的实现。`包括
 
 <br>
 <br>
-
-  
-#### Codec 加解密接口使用示例
-```java
-String str = "666你 好好nihaohao=@!!%#$--/";
-String key = "key_A123666";
-
-//得到一个AES实现
-Codec aes = Codec.Type.AES.create();
-String result = aes.encrypt(str, key);
-System.out.println(result);
-System.out.println(aes.decrypt(result, key));
-        
-/*
-console:
-    RlPSP1CQwWyU+RSKuG0aXmREDUN9j12vCBQEns+gLyc=
-    666你 好好nihaohao=@!!%#$--/
-*/
-```
-<br>
-<br>
-
-#### jwt 创建方式/调用方式 示例
-```java
-String jwt = new JwtBuilder().header(Codec.Type.HS512)//指定签名加密算法为 HmacSHA512,默认为 HmacSHA256
-        .payload().iss("Koishi").exp(TimeUnit.MINUTES.toMillis(3))
-        .data("abc", "abc").data("666", "qwe")//自定义负载的参数
-        .and().build("This is key secret");
-    
-//or
-    
-Payload payload = new Payload.PayloadBuilder().exp(30000L).build();
-String jwt2 = new JwtBuilder().payload(payload).header().build("This is key secret");
-  
-
-/*
-例子 1 取得的 jwt :
-eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.
-eyJqdGkiOjEsImV4cCI6MTU0ODkxNTkwNDc2NywibmJmIjoxNTQ4OTE1NzI0NzY3LCJpYXQiOjE1NDg5MTU3MjQ3NjcsImlzcyI6IktvaXNoaSIsImFiYyI6ImFiYyIsIjY2NiI6InF3ZSJ9.
-48AB9034F794D71B7BFA8B3D660DEF0C78D3CBE666721A9D8F140E7097709AFC425F8F26454668C8A0B9A75A8A90D4954FAF6F84EE5FE4EE998CF9FD9669CD86
-  
-header 部分经过Base64URL解码后: {"alg":"HS512","typ":"JWT"}
-payload 部分经过Base64URL解码后: {"jti":1,"exp":1548915904767,"nbf":1548915724767,"iat":1548915724767,"iss":"Koishi","abc":"abc","666":"qwe"}
-*/
-```
-
-<br>
-<br>
-
-#### jwt 验证示例 
-```java
-String[] tempArr = jwt.split("\\.");
-  
-//1、先得到头部json
-String headerJson = Codec.Type.Base64URL.create().decrypt(tempArr[0], null);
-  
-//2、进行 json 处理,取头部 algorithm 属性,即获取 signature 的算法
-Map map = new ObjectMapper().readValue(headerJson, Map.class);
-String CodecType = map.get("alg").toString();
-  
-//3、通过 valueOf 方法获取对应算法的 enum 并进行算法实体的创建
-Codec codec = Codec.Type.valueOf(CodecType).create();
-  
-//4、通过 key secret 进行签名匹配
-String ciphertext = codec.encrypt(tempArr[0] + "." + tempArr[1], "This is key secret");
-boolean isMatch = ciphertext.equals(tempArr[2]);//true (这里以上面的创建示例1作为演示)
-  
-//注: 服务端知道签名算法的话可省略1/2/3 步骤
-```
