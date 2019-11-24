@@ -1,8 +1,8 @@
-package com.skypyb.jwt;
+package com.skypyb.sejwt.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.skypyb.cryptography.Encrypt;
+import com.skypyb.sejwt.cryptography.Codec;
 
 
 /**
@@ -12,19 +12,24 @@ import com.skypyb.cryptography.Encrypt;
  * @author pyb
  * @time 2019-01-28
  */
-public class Header {
-    private Encrypt.Type encrypt;
+public final class Header {
+    private Codec codec;
     private String alg;//签名的算法(algorithm)
     private static final String typ = "JWT";
 
 
-    protected Header(Encrypt.Type encrypt) {
-        this.encrypt = encrypt;
-        this.alg = encrypt.name();
+    protected Header(Codec.Type codecType) {
+        this.codec = codecType.create();
+        this.alg = codecType.name();
     }
 
-    public Encrypt.Type getEncrypt() {
-        return encrypt;
+    protected Header(Codec codec, String alg) {
+        this.codec = codec;
+        this.alg = alg;
+    }
+
+    public Codec getEncryptor() {
+        return codec;
     }
 
     public String toJson() {

@@ -1,4 +1,4 @@
-package com.skypyb.jwt;
+package com.skypyb.sejwt.jwt;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

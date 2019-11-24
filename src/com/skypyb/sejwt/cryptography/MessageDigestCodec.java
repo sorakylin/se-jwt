@@ -1,4 +1,4 @@
-package com.skypyb.cryptography;
+package com.skypyb.sejwt.cryptography;
 
 
 import java.math.BigInteger;
@@ -9,11 +9,11 @@ import java.security.NoSuchAlgorithmException;
  * 信息摘要
  * 不可逆
  */
-public class MessageDigestEncrypt implements Encrypt {
+public final class MessageDigestCodec implements Codec {
 
     private String type;
 
-    public MessageDigestEncrypt(String type) {
+    public MessageDigestCodec(String type) {
         this.type = type;
     }
 
@@ -34,7 +34,7 @@ public class MessageDigestEncrypt implements Encrypt {
 
     @Override
     public String decrypt(String str, String secret) {
-        throw new IllegalStateException("MessageDigest is irreversible encryption!");
+        throw new UnsupportedOperationException("MessageDigest is irreversible encryption!");
     }
 
 }

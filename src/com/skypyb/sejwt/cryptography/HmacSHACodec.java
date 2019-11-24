@@ -1,4 +1,4 @@
-package com.skypyb.cryptography;
+package com.skypyb.sejwt.cryptography;
 
 
 import javax.crypto.Mac;
@@ -11,11 +11,11 @@ import java.security.NoSuchAlgorithmException;
  * 哈希算法 Hmac 实现
  * 此算法为不可逆的
  */
-public class HmacSHAEncrypt implements Encrypt {
+public final class HmacSHACodec implements Codec {
     private static HexBinaryAdapter hexBinaryAdapter = new HexBinaryAdapter();
     private String type;
 
-    public HmacSHAEncrypt(String type) {
+    public HmacSHACodec(String type) {
         this.type = type;
     }
 
@@ -39,7 +39,7 @@ public class HmacSHAEncrypt implements Encrypt {
     }
 
     public String decrypt(String str, String secret) {
-        throw new IllegalStateException("HmacSHA is irreversible encryption!");
+        throw new UnsupportedOperationException("HmacSHA is irreversible encryption!");
     }
 
 }
