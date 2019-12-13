@@ -1,8 +1,8 @@
 package com.skypyb.sejwt.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.skypyb.sejwt.cryptography.Codec;
+import com.skypyb.sejwt.util.JsonUtil;
 
 
 /**
@@ -13,6 +13,8 @@ import com.skypyb.sejwt.cryptography.Codec;
  * @time 2019-01-28
  */
 public final class Header {
+
+    @JsonIgnore
     private Codec codec;
     private String alg;//签名的算法(algorithm)
     private static final String typ = "JWT";
@@ -33,10 +35,7 @@ public final class Header {
     }
 
     public String toJson() {
-        ObjectNode objectNode = new ObjectMapper().createObjectNode();
-        objectNode.put("alg", alg);
-        objectNode.put("typ", typ);
-        return objectNode.toString();
+        return JsonUtil.toJson(this).get();
     }
 
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.skypyb.sejwt.jwt.strategy.DefaultJtiGenerateStrategy;
+import com.skypyb.sejwt.util.JsonUtil;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -46,7 +47,7 @@ public class Payload {
     }
 
     public String toJson() {
-        ObjectNode objectNode = new ObjectMapper().createObjectNode();
+        ObjectNode objectNode = JsonUtil.createObjectNode();
         objectNode.put("jti", jti);
         objectNode.put("exp", exp);
         objectNode.put("nbf", nbf);
