@@ -1,6 +1,7 @@
 package com.skypyb.sejwt.jwt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.skypyb.sejwt.cryptography.Codec;
 import com.skypyb.sejwt.util.JsonUtil;
 
@@ -14,10 +15,11 @@ import com.skypyb.sejwt.util.JsonUtil;
  */
 public final class Header {
 
-    @JsonIgnore
+    private static final String JWT_TYPE = "JWT";
+
     private Codec codec;
     private String alg;//签名的算法(algorithm)
-    private static final String typ = "JWT";
+    private String typ = JWT_TYPE;//签名的算法(algorithm)
 
 
     protected Header(Codec.Type codecType) {
@@ -35,7 +37,10 @@ public final class Header {
     }
 
     public String toJson() {
-        return JsonUtil.toJson(this).get();
+        ObjectNode objectNode = JsonUtil.createObjectNode();
+        objectNode.put("alg", alg);
+        objectNode.put("typ", typ);
+        return JsonUtil.toJson(objectNode).get();
     }
 
 
