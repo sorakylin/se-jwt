@@ -4,6 +4,7 @@ import com.skypyb.sejwt.cryptography.Codec;
 import com.skypyb.sejwt.jwt.en.JwtAttribute;
 import com.skypyb.sejwt.util.JsonUtil;
 
+import javax.smartcardio.ATR;
 import java.util.*;
 
 /**
@@ -78,9 +79,9 @@ public abstract class AbstractToken implements Token {
         if (Objects.nonNull(this.attrMap)) return;
 
         if (decodeHeader() && decodePayload()) {
-            this.attrMap = new HashMap<>();
-            JsonUtil.fromJsonToObject(this.headerJson, Map.class).ifPresent(this.attrMap::putAll);
-            JsonUtil.fromJsonToObject(this.payloadJson, Map.class).ifPresent(this.attrMap::putAll);
+            this.attrMap = new LinkedHashMap<>();
+            JsonUtil.fromJsonToObject(this.headerJson, attrMap.getClass()).ifPresent(this.attrMap::putAll);
+            JsonUtil.fromJsonToObject(this.payloadJson, attrMap.getClass()).ifPresent(this.attrMap::putAll);
         } else {
             this.attrMap = Collections.emptyMap();
         }
@@ -111,7 +112,9 @@ public abstract class AbstractToken implements Token {
     public final Optional<String> getAttributeValue(String attribute) {
         if (Objects.isNull(attribute)) return Optional.empty();
         initAttributeMap();
-        return Optional.ofNullable(attrMap.get(attribute));
+        final Object result = attrMap.get(attribute);
+        if (Objects.isNull(result)) return Optional.empty();
+        return Optional.ofNullable(String.valueOf(result));
     }
 
     @Override
