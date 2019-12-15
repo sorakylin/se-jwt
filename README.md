@@ -12,22 +12,25 @@ This is a jwt build tool and some cryptographic components.
 
 ## 用途  
 此工具主要用于生成 jwt (Json Web Token)。 JDK版本最低支持1.8。 
+
+<br>
 <br>
 
-## 功能说明 
-com.skypyb.sejwt.jwt 包下为可以舒适的创建 jwt 所必需的类
-- 通过 Builder 来进行建造,使用优雅的链式调用法指定好 header、payload、secret。`默认使用 HmacSHA256 进行签名加密`  
-- 可通过默认的枚举选择多种签名加密算法,也支持实现 com.skypyb.sejwt.cryptography.Codec 接口,使用自定义签名的方式。  
-- jwt 负载(payload) 创建时,可方便的放入私有属性/json 对象以供业务处理,支持 String 类型或是 JsonNode 类型。
-- payload 中的 jti(编号) 可使用指定的 jti 生成器来进行生成，默认情况下使用的的是线程安全的long型ID自增生成器。
+
+
+## 功能特性 
+**com.skypyb.sejwt.jwt** 包下为创建 jwt 所需要的类
+
+- 简洁快速, 通过链式调用法建造 header、payload、secret。`默认使用 HmacSHA256 进行签名加密`  
+- Payload 中的 jti(编号) 可自行实现 jti 生成器来获取，默认情况使用内置的线程安全long型ID自增生成器。
 - 提供方便的工具类对已生成的 JWT 进行处理, 快速效验、取参
 <br>
 
-com.skypyb.sejwt.cryptography 包下封装许多加密/解密的实现。`包括hash/散列/编码等非加密算法 , 以下同`
-- 拥有一个加密/解密的接口 Codec ,能够实现它来自由定制不同的加密方式,动态水平扩展。
-- 可使用 enum Codec.Type 快速的创建本工具中的默认 Codec 实例。`使用枚举创建的算法实体是单例的`
-- 该包是高内聚的,可不依靠jwt模块单独使用
-- 目前实现的加密方式:  
+**com.skypyb.sejwt.cryptography** 包为编解码的算法实现。`包括hash/散列/编码/加密等`
+
+- 具体算法均实现自接口 Codec , 可自行实现接口完成动态水平扩展。
+- 内聚，可不依靠 JWT 模块单独使用
+- 此工具内部默认集成的编解码算法:  
     - AES
     - DES
     - DES3
@@ -49,7 +52,7 @@ com.skypyb.sejwt.cryptography 包下封装许多加密/解密的实现。`包括
 ## 快速开始:
 <br>
 
-#### Codec 加解密接口使用
+#### 默认集成的 Codec 组件使用
 ```java
 String str = "666你 好好nihaohao=@!!%#$--/";
 String key = "key_A123666";
@@ -69,7 +72,7 @@ console:
 <br>
 <br>
 
-#### jwt 创建方式
+#### JWT 创建方式
 ```java
 String jwt = new JwtBuilder()
         .header(Codec.Type.HS512)//指定签名加密算法为 HmacSHA512,默认为 HmacSHA256
@@ -98,7 +101,7 @@ payload 部分经过Base64URL解码后: {"jti":1,"exp":1548915904767,"nbf":15489
 <br>
 <br>
 
-#### jwt 效验:
+#### JWT 效验:
 ```java
 String[] tempArr = jwt.split("\\.");
   
