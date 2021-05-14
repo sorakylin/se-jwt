@@ -1,17 +1,12 @@
-package com.skypyb.sejwt.cryptography.impl;
+package com.sorakylin.sejwt.cryptography.impl;
 
 
-import com.skypyb.sejwt.cryptography.Codec;
-import com.skypyb.sejwt.cryptography.SymmetricCodec;
+import com.sorakylin.sejwt.cryptography.SymmetricCodec;
 
-import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Base64;
 
 /**
  * DES 对称加密

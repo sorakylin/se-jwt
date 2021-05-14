@@ -19,14 +19,14 @@ This is a jwt build tool and some cryptographic components.
 
 
 ## 功能特性 
-**com.skypyb.sejwt.jwt** 包下为创建 jwt 所需要的类
+**com.sorakylin.sejwt.jwt** 包下为创建 jwt 所需要的类
 
 - 简洁快速, 通过链式调用法建造 header、payload、secret。`默认使用 HmacSHA256 进行签名加密`  
 - Payload 中的 jti(编号) 可自行实现 jti 生成器来获取，默认情况使用内置的线程安全long型ID自增生成器。
 - 提供方便的工具类对已生成的 JWT 进行处理, 快速效验、取参
 <br>
 
-**com.skypyb.sejwt.cryptography** 包为编解码的算法实现。`包括hash/散列/编码/加密等`
+**com.sorakylin.sejwt.cryptography** 包为编解码的算法实现。`包括hash/散列/编码/加密等`
 
 - 具体算法均实现自接口 Codec , 可自行实现接口完成动态水平扩展。
 - 内聚，可不依靠 JWT 模块单独使用

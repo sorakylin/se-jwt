@@ -1,7 +1,7 @@
-package com.skypyb.sejwt.cryptography.impl;
+package com.sorakylin.sejwt.cryptography.impl;
 
 
-import com.skypyb.sejwt.cryptography.SymmetricCodec;
+import com.sorakylin.sejwt.cryptography.SymmetricCodec;
 
 import javax.crypto.KeyGenerator;
 import java.security.Key;
@@ -9,15 +9,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * DES3 对称加密
+ * AES 对称加密,这里填充方式选用 PKCS5Padding
  *
  * @author pyb
- * @time 2019-11-24
+ * @time 2019-01-31
  */
-public class DESedeCodec extends SymmetricCodec {
+public class AesCodec extends SymmetricCodec {
 
-    public DESedeCodec() {
-        super("DESede/ECB/PKCS5PADDING");
+    public AesCodec() {
+        super("AES/ECB/PKCS5PADDING");
     }
 
     @Override
@@ -25,16 +25,15 @@ public class DESedeCodec extends SymmetricCodec {
         KeyGenerator kgen = null;
         SecureRandom random = null;
         try {
-            kgen = KeyGenerator.getInstance("DESede");
+            kgen = KeyGenerator.getInstance("AES");
             random = SecureRandom.getInstance("SHA1PRNG");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
         random.setSeed(secret.getBytes());
-        kgen.init(112, random);
+        kgen.init(128, random);
         Key key = kgen.generateKey();
         return key;
     }
-
 }
